@@ -1,42 +1,44 @@
 "use client"
 
-import type React from "react"
+import { useRef } from "react"
+import { Canvas, useFrame } from "@react-three/fiber"
+import type { Mesh } from "three"
+import { RoundedBox } from "@react-three/drei"
 
-import { Card, CardContent } from "@/components/ui/card"
-import { ClientOnly } from "./client-only-wrapper"
+function FloatingCard({ position, color }: { position: [number, number, number]; color: string }) {
+  const meshRef = useRef<Mesh>(null)
 
-interface FloatingCardProps {
-  title: string
-  value: string
-  icon: React.ReactNode
-  delay?: number
-}
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime + position[0]) * 0.1
+      meshRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5 + position[1]) * 0.1
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.2
+    }
+  })
 
-function FloatingCardFallback() {
   return (
-    <Card className="w-48 h-32 crypto-card">
-      <CardContent className="p-4 flex flex-col justify-center items-center">
-        <div className="w-8 h-8 bg-primary/20 rounded-full animate-pulse mb-2" />
-        <div className="w-20 h-4 bg-primary/20 rounded animate-pulse mb-1" />
-        <div className="w-16 h-3 bg-muted/50 rounded animate-pulse" />
-      </CardContent>
-    </Card>
+    <RoundedBox ref={meshRef} args={[1, 1.4, 0.1]} position={position} radius={0.1}>
+      <meshStandardMaterial color={color} metalness={0.3} roughness={0.4} />
+    </RoundedBox>
   )
 }
 
-export function FloatingCard({ title, value, icon, delay = 0 }: FloatingCardProps) {
+export function FloatingCards() {
+  const cards = [
+    { position: [-2, 0, 0] as [number, number, number], color: "#667eea" },
+    { position: [0, 0.5, -1] as [number, number, number], color: "#f093fb" },
+    { position: [2, -0.3, 0.5] as [number, number, number], color: "#4facfe" },
+  ]
+
   return (
-    <ClientOnly fallback={<FloatingCardFallback />}>
-      <Card
-        className="w-48 h-32 crypto-card hover:glow-effect transition-all duration-300 animate-float card-3d"
-        style={{ animationDelay: `${delay}s` }}
-      >
-        <CardContent className="p-4 flex flex-col justify-center items-center text-center">
-          <div className="text-primary mb-2">{icon}</div>
-          <div className="text-lg font-bold text-primary">{value}</div>
-          <div className="text-sm text-muted-foreground">{title}</div>
-        </CardContent>
-      </Card>
-    </ClientOnly>
+    <div className="w-full h-64 relative">
+      <Canvas camera={{ position: [0, 0, 5] }}>
+        <ambientLight intensity={0.6} />
+        <pointLight position={[10, 10, 10]} />
+        {cards.map((card, index) => (
+          <FloatingCard key={index} position={card.position} color={card.color} />
+        ))}
+      </Canvas>
+    </div>
   )
 }
