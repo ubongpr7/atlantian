@@ -68,27 +68,13 @@
   }
 }
 
-/* Custom crypto-themed gradients */
-.crypto-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* Simple, clean styles only */
+.transition-colors {
+  transition: color 0.2s ease;
 }
 
-.crypto-gradient-2 {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.crypto-gradient-3 {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.crypto-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glow-effect {
-  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+.transition-all {
+  transition: all 0.3s ease;
 }
 
 /* Custom scrollbar */
@@ -183,6 +169,84 @@
 
 .animate-scale-in {
   animation: scale-in 0.5s ease-out;
+}
+
+/* Crystal-specific animations */
+@keyframes crystal-float {
+  0%,
+  100% {
+    transform: translateY(0px) rotateY(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotateY(90deg);
+  }
+  50% {
+    transform: translateY(-5px) rotateY(180deg);
+  }
+  75% {
+    transform: translateY(-15px) rotateY(270deg);
+  }
+}
+
+@keyframes crystal-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4)) drop-shadow(0 0 40px rgba(99, 102, 241, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.6)) drop-shadow(0 0 60px rgba(99, 102, 241, 0.4));
+  }
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-crystal-float {
+  animation: crystal-float 8s ease-in-out infinite;
+}
+
+.animate-crystal-glow {
+  animation: crystal-glow 3s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Gradient radial utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
+
+/* Crystal facet effects */
+.crystal-facet {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(59, 130, 246, 0.3) 25%,
+    rgba(99, 102, 241, 0.2) 50%,
+    rgba(139, 92, 246, 0.3) 75%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  backdrop-filter: blur(10px);
+}
+
+/* Enhanced glow effects for Atlantian theme */
+.atlantian-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(99, 102, 241, 0.2), 0 0 60px rgba(139, 92, 246, 0.1);
+}
+
+.atlantian-text-glow {
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5), 0 0 20px rgba(99, 102, 241, 0.3), 0 0 30px rgba(139, 92, 246, 0.2);
 }
 
 /* Glassmorphism effects */
