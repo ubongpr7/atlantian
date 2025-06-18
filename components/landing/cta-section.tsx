@@ -1,152 +1,125 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import { BlockchainVisualization } from "@/components/3d/blockchain-visualization"
-import { ArrowRight, Mail, Gift, Zap, Crown } from "lucide-react"
+import { ArrowRight, Mail, CheckCircle } from "lucide-react"
 import Link from "next/link"
-import { toast } from "react-toastify"
 
 export function CTASection() {
   const [email, setEmail] = useState("")
   const [isSubscribed, setIsSubscribed] = useState(false)
 
-  const handleSubscribe = () => {
-    if (!email) {
-      toast.error("Please enter your email address")
-      return
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (email) {
+      setIsSubscribed(true)
+      setTimeout(() => {
+        setIsSubscribed(false)
+        setEmail("")
+      }, 3000)
     }
-
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      toast.error("Please enter a valid email address")
-      return
-    }
-
-    setIsSubscribed(true)
-    toast.success("Successfully subscribed! Welcome bonus incoming 🎉")
-    setEmail("")
   }
 
+  const stats = [
+    { label: "Total Value Locked", value: "$2.5B+", change: "+12.5%" },
+    { label: "Daily Transactions", value: "1.2M+", change: "+8.3%" },
+    { label: "Active Wallets", value: "500K+", change: "+15.7%" },
+  ]
+
   return (
-    <section className="py-24 relative overflow-hidden">
-      {/* Animated Background */}
+    <section className="py-20 px-6 relative overflow-hidden">
+      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-purple-500/10 to-blue-500/10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(102,126,234,0.2),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(240,147,251,0.2),transparent_50%)]" />
 
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-20 animate-float">
-        <div className="w-20 h-20 bg-gradient-to-br from-primary to-purple-500 rounded-full opacity-20 blur-xl" />
-      </div>
-      <div className="absolute bottom-20 right-20 animate-float delay-1000">
-        <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full opacity-20 blur-xl" />
-      </div>
-
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">
-            <div className="space-y-4">
-              <Badge className="bg-gradient-to-r from-primary to-purple-500 text-white border-0">
-                <Gift className="h-3 w-3 mr-1" />
-                Limited Time Offer
-              </Badge>
-
+            <div className="space-y-6">
               <h2 className="text-4xl md:text-6xl font-bold leading-tight">
-                Start Your
-                <span className="bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text text-transparent block">
-                  Crypto Journey
+                Ready to Start Your{" "}
+                <span className="bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text text-transparent">
+                  Crypto Journey?
                 </span>
-                Today
               </h2>
-
               <p className="text-xl text-muted-foreground">
-                Join over 500,000 users and get exclusive access to premium features, airdrops, and a $50 welcome bonus
-                when you sign up.
+                Join thousands of traders who trust Atlanteas Crown for their cryptocurrency needs. Start trading,
+                staking, and earning today.
               </p>
             </div>
 
-            {/* Benefits */}
-            <div className="space-y-3">
-              {[
-                { icon: Crown, text: "Premium account features for 30 days" },
-                { icon: Gift, text: "$50 welcome bonus in ATC tokens" },
-                { icon: Zap, text: "Zero trading fees for your first month" },
-                { icon: Mail, text: "Exclusive airdrops and early access" },
-              ].map((benefit, index) => {
-                const IconComponent = benefit.icon
-                return (
-                  <div key={index} className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-purple-500/20 flex items-center justify-center">
-                      <IconComponent className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-muted-foreground">{benefit.text}</span>
-                  </div>
-                )
-              })}
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {stats.map((stat, index) => (
+                <Card key={stat.label} className="crypto-card">
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-bold text-primary mb-1">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground mb-1">{stat.label}</div>
+                    <div className="text-xs text-green-500">{stat.change}</div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
 
-            {/* Email Signup */}
-            <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <Input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 bg-background/50 backdrop-blur-sm border-primary/20 focus:border-primary/40"
-                    disabled={isSubscribed}
-                  />
+            {/* Newsletter Signup */}
+            <Card className="crypto-card p-6">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Mail className="h-5 w-5 text-primary" />
+                  <h3 className="text-lg font-semibold">Stay Updated</h3>
                 </div>
-                <Button
-                  onClick={handleSubscribe}
-                  disabled={isSubscribed}
-                  className="h-12 px-8 bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary transition-all duration-300 transform hover:scale-105"
-                >
-                  {isSubscribed ? (
-                    <>
-                      <Gift className="mr-2 h-4 w-4" />
-                      Subscribed!
-                    </>
-                  ) : (
-                    <>
-                      Get Started
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
+                <p className="text-muted-foreground">
+                  Get the latest updates on new features, market insights, and exclusive offers.
+                </p>
+
+                {!isSubscribed ? (
+                  <form onSubmit={handleSubscribe} className="flex space-x-2">
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="flex-1"
+                      required
+                    />
+                    <Button type="submit" className="bg-gradient-to-r from-primary to-purple-600">
+                      Subscribe
+                    </Button>
+                  </form>
+                ) : (
+                  <div className="flex items-center space-x-2 text-green-500">
+                    <CheckCircle className="h-5 w-5" />
+                    <span>Successfully subscribed!</span>
+                  </div>
+                )}
               </div>
+            </Card>
 
-              <p className="text-sm text-muted-foreground">
-                By signing up, you agree to our Terms of Service and Privacy Policy. No spam, unsubscribe anytime.
-              </p>
-            </div>
-
-            {/* Main CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/dashboard" className="flex-1">
                 <Button
                   size="lg"
-                  className="w-full group relative overflow-hidden bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary transition-all duration-300 transform hover:scale-105"
+                  className="w-full group bg-gradient-to-r from-primary to-purple-600 hover:from-purple-600 hover:to-primary transition-all duration-300 transform hover:scale-105"
                 >
-                  <span className="relative z-10 flex items-center justify-center">
-                    Launch Platform
+                  <span className="flex items-center">
+                    Create Account
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
               </Link>
-
-              <Link href="/learn" className="flex-1">
+              <Link href="/trading" className="flex-1">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 transform hover:scale-105"
+                  className="w-full border-primary/20 hover:border-primary/40 hover:bg-primary/5"
                 >
-                  Learn More
+                  Explore Trading
                 </Button>
               </Link>
             </div>
@@ -154,40 +127,20 @@ export function CTASection() {
 
           {/* Right Content - 3D Visualization */}
           <div className="relative">
-            <div className="relative z-10">
-              <BlockchainVisualization />
-            </div>
+            <BlockchainVisualization />
 
             {/* Overlay Stats */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 border border-primary/20">
-                  <div className="text-2xl font-bold text-primary">500K+</div>
-                  <div className="text-sm text-muted-foreground">Active Users</div>
-                </div>
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 border border-primary/20">
-                  <div className="text-2xl font-bold text-primary">$2.5B+</div>
-                  <div className="text-sm text-muted-foreground">Total Volume</div>
-                </div>
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 border border-primary/20">
-                  <div className="text-2xl font-bold text-primary">150+</div>
-                  <div className="text-sm text-muted-foreground">Countries</div>
-                </div>
-                <div className="bg-background/80 backdrop-blur-sm rounded-lg p-4 border border-primary/20">
-                  <div className="text-2xl font-bold text-primary">99.9%</div>
-                  <div className="text-sm text-muted-foreground">Uptime</div>
-                </div>
-              </div>
+            <div className="absolute top-4 right-4 bg-background/80 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+              <div className="text-sm font-medium text-primary">Live Network</div>
+              <div className="text-xs text-muted-foreground">12,543 TPS</div>
+            </div>
+
+            <div className="absolute bottom-4 left-4 bg-background/80 backdrop-blur-sm rounded-lg p-3 border border-border/50">
+              <div className="text-sm font-medium text-green-500">Network Health</div>
+              <div className="text-xs text-muted-foreground">99.9% Uptime</div>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Bottom Wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1200 120" className="w-full h-20 fill-background">
-          <path d="M0,60 C300,120 900,0 1200,60 L1200,120 L0,120 Z" />
-        </svg>
       </div>
     </section>
   )

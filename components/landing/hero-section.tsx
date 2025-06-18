@@ -16,9 +16,16 @@ export function HeroSection() {
   })
 
   const [typedText, setTypedText] = useState("")
+  const [isClient, setIsClient] = useState(false)
   const fullText = "The Future of Cryptocurrency Trading"
 
   useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isClient) return
+
     let index = 0
     const timer = setInterval(() => {
       if (index < fullText.length) {
@@ -30,10 +37,12 @@ export function HeroSection() {
     }, 100)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [isClient])
 
   // Mock real-time price updates
   useEffect(() => {
+    if (!isClient) return
+
     const interval = setInterval(() => {
       setMarketData((prev) => ({
         ...prev,
@@ -43,7 +52,7 @@ export function HeroSection() {
     }, 3000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [isClient])
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -64,23 +73,25 @@ export function HeroSection() {
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-ping" />
                 Live Market
               </Badge>
-              <div className="flex items-center space-x-2 text-sm">
-                <span className="text-muted-foreground">ATC:</span>
-                <span className="font-bold text-primary">${marketData.price.toFixed(2)}</span>
-                <span className={`flex items-center ${marketData.change >= 0 ? "text-green-500" : "text-red-500"}`}>
-                  <TrendingUp className="h-3 w-3 mr-1" />
-                  {marketData.change.toFixed(1)}%
-                </span>
-              </div>
+              {isClient && (
+                <div className="flex items-center space-x-2 text-sm">
+                  <span className="text-muted-foreground">ATC:</span>
+                  <span className="font-bold text-primary">${marketData.price.toFixed(2)}</span>
+                  <span className={`flex items-center ${marketData.change >= 0 ? "text-green-500" : "text-red-500"}`}>
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                    {marketData.change.toFixed(1)}%
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Main Headline */}
             <div className="space-y-4">
               <h1 className="text-5xl md:text-7xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-primary via-purple-500 to-blue-500 bg-clip-text text-transparent">
-                  {typedText}
+                  {isClient ? typedText : fullText}
                 </span>
-                <span className="animate-pulse">|</span>
+                {isClient && typedText.length < fullText.length && <span className="animate-pulse">|</span>}
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
                 Experience the most advanced cryptocurrency platform built on Polkadot. Trade, stake, and manage your
@@ -128,7 +139,7 @@ export function HeroSection() {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-6 pt-8">
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{marketData.volume}</div>
+                <div className="text-2xl font-bold text-primary">{isClient ? marketData.volume : "2.5M"}</div>
                 <div className="text-sm text-muted-foreground">24h Volume</div>
               </div>
               <div className="text-center">
@@ -136,7 +147,7 @@ export function HeroSection() {
                 <div className="text-sm text-muted-foreground">Active Users</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">${marketData.marketCap}</div>
+                <div className="text-2xl font-bold text-primary">${isClient ? marketData.marketCap : "125M"}</div>
                 <div className="text-sm text-muted-foreground">Market Cap</div>
               </div>
             </div>
