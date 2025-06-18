@@ -306,7 +306,7 @@ export default function NFTPage() {
             ) : (
               <Card className="crypto-card">
                 <CardContent className="flex flex-col items-center justify-center py-16">
-                  <Image className="h-16 w-16 text-muted-foreground mb-4" />
+                  <ImageIcon className="h-16 w-16 text-muted-foreground mb-4" />
                   <h3 className="text-xl font-semibold mb-2">No NFTs Yet</h3>
                   <p className="text-muted-foreground text-center mb-6">
                     You don't own any NFTs yet. Browse the marketplace to find amazing digital collectibles.
